@@ -1,0 +1,27 @@
+import pandas as pd
+import numpy as np
+df = pd.read_csv("/home/vaalmiki/Downloads/wineQualityReds.csv", sep=',')
+df.head()
+x = df.iloc[:, 0:11].values
+y = df.iloc[:, 11].values
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=10, random_state=0)
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train = scaler.fit_transform(x_train)
+X_test = scaler.transform(x_test)
+from sklearn.ensemble import RandomForestClassifier
+classifier = RandomForestClassifier(n_estimators=300, random_state=0)
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+scores=[]
+kFold=KFold(n_splits=10,random_state=42,shuffle=True)
+for train_index,test_index in kFold.split(x):
+    x_train, x_test, y_train, y_test = x[train_index], x[test_index], y[train_index], y[test_index]
+    classifier.fit(x_train, y_train)
+    scores.append(classifier.score(x_test, y_test))
+classifier.fit(x_train,y_train)
+scores.append(classifier.score(x_test,y_test))
+print('Cross validation scores are: \n', cross_val_score(classifier, x, y, cv=10))
+classifier.fit(x_train,y_train)
+print("ACCURACY OF THE MODEL:", classifier.score(x_test,y_test))
