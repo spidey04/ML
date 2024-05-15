@@ -1,0 +1,26 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+# Load the dataset
+dataset = pd.read_csv("/home/vaalmiki/Downloads/wineQualityReds.csv", sep=',')
+X = dataset.iloc[:, 0:11].values
+y = dataset.iloc[:, 11].values
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=10, random_state=0)
+# Standardize the features
+feature_scaler = StandardScaler()
+X_train = feature_scaler.fit_transform(X_train)
+X_test = feature_scaler.transform(X_test)
+# Initialize RandomForestClassifier
+classifier = RandomForestClassifier(n_estimators=300, random_state=0)
+# Perform k-fold cross-validation
+kFold = KFold(n_splits=10, random_state=42, shuffle=True)
+scores = cross_val_score(classifier, X, y, cv=kFold)
+# Print cross-validation scores
+print('Cross validation scores:', scores)
+# Train the model on the training data and print accuracy on the test data
+classifier.fit(X_train, y_train)
+accuracy = classifier.score(X_test, y_test)
+print("Accuracy of the model:", accuracy)

@@ -1,0 +1,23 @@
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
+import joblib
+# Load data
+iris = load_iris()
+features = iris.data
+target = iris.target
+# Create and train the Random Forest Classifier
+classifier = RandomForestClassifier()
+model = classifier.fit(features, target)
+# Save the trained model as a pickle file
+joblib.dump(model, "model.pkl")
+# Load the saved model
+classifier = joblib.load("model.pkl")
+# Make predictions
+new_observation = [[5.2, 3.2, 1.1, 0.1]]
+output_class = classifier.predict(new_observation)
+print("Predicted class:", output_class)
+# Make predictions on the 101st data point
+output_class = classifier.predict(iris.data[101].reshape(1, -1))
+print("Predicted class:", output_class)
+# Print the actual class of the 101st data point
+print("Actual class:", iris.target[101])

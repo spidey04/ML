@@ -1,0 +1,44 @@
+import pandas as pd
+import numpy as np
+# importing iris dataset
+from sklearn.datasets import load_iris
+iris = load_iris()
+# seperating independent and dependent variables
+x = iris.data[:100,]
+y = iris.target[:100]
+# scaling independent variables.
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+x = scaler.fit_transform(x)
+from sklearn.linear_model import LogisticRegression
+modelLOR = LogisticRegression()
+modelLOR.fit(x,y)
+y_pred = modelLOR.predict(x)
+from sklearn.metrics import accuracy_score
+print(accuracy_score(y,y_pred))
+
+
+#KNN Classifier
+import numpy as np
+import pandas as pd
+df=pd.read_csv("/home/vaalmiki/Downloads/SocialNetworkAds.csv")
+print(df)
+x=df.iloc[:,[2,3]].values
+y=df.iloc[:,4].values
+#Splitting into training and testing sets
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.25,random_state=0)
+#Scaling
+from sklearn.preprocessing import StandardScaler
+s=StandardScaler()
+x_train=s.fit_transform(x_train)
+x_test=s.fit_transform(x_test)
+#KNN & Prediction
+from sklearn.neighbors import KNeighborsClassifier,KNeighborsRegressor
+c=KNeighborsClassifier(n_neighbors=5,metric='minkowski',p=2)
+c.fit(x_train,y_train)
+y_pred=c.predict(x_test)
+print(y_pred)
+#Building Performance
+from sklearn.metrics import confusion_matrix
+printf(confusion_matrix(y_test,y_pred))

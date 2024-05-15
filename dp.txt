@@ -1,0 +1,32 @@
+import numpy as np
+import pandas as pd
+df=pd.read_csv("/home/vaalmiki/Downloads/data.csv")
+print(df)
+#checking Missing or null values
+print(df.isnull().sum())
+#Dropping null values
+x=df.dropna()
+print(x)
+#Filling mean for null values
+df['Age'].fillna(value=df['Age'].mean(),inplace=True)
+df['Salary'].fillna(value=df['Salary'].mean(),inplace=True)
+print(df)
+#Handling categorical data
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+df['Country']=le.fit_transform(df[['Country']])
+df['Purchased']=le.fit_transform(df[['Purchased']])
+print(df)
+#MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
+min_max=MinMaxScaler(feature_range=(0,1))
+x1=min_max.fit_transform(df)
+name=df.columns
+data=pd.DataFrame(x1,columns=name)
+print(data)
+#Selecting meaningful values
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+bestfit=SelectKBest(score_func=chi2,k=3)
+fit=bestfit.fit(data.iloc[:,0:-1],data.iloc[:,-1])
+pd.DataFrame({'Columns':["Country","Age","Salary"],'Scores':fit.scores_})
